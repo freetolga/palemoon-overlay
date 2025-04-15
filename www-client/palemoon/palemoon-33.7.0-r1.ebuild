@@ -29,6 +29,11 @@ IUSE="
 	+devtools
 	+av1
 	+jpegxl
+	system-hunspell
+	system-ffi
+	system-cairo
+	system-extension-dirs
+	system-pixman
 "
 
 EGIT_REPO_URI="https://repo.palemoon.org/MoonchildProductions/Pale-Moon.git"
@@ -62,6 +67,10 @@ RDEPEND="
 	media-video/ffmpeg[x264]
 
 	necko-wifi? ( net-wireless/wireless-tools )
+	system-hunspell? ( app-text/hunspell )
+	system-ffi? ( dev-libs/libffi )
+	system-cairo? ( x11-libs/cairo )
+	system-pixman? ( x11-libs/pixman )
 "
 
 REQUIRED_USE="
@@ -106,7 +115,7 @@ src_configure() {
 			O="${O} -msse2 -mfpmath=sse"
 		fi
 		mozconfig_enable "optimize=\"${O}\""
-		filter-flags '-O*' '-mavx' '-msse2' '-mfpmath=sse' '-flto*' '-Werror*'
+		filter-flags '-O*' '-mavx' '-msse2' '-mfpmath=sse' '-flto*' '-Werror*' '-ffast-math'
 	else
 		mozconfig_disable optimize
 	fi
@@ -158,6 +167,27 @@ src_configure() {
 
 	if use jpegxl; then
 		mozconfig_enable jxl
+	fi
+
+
+	if use system-hunspell; then
+		mozconfig_enable system-hunspell
+	fi
+
+	if use system-ffi; then
+		mozconfig_enable system-ffi
+	fi
+
+	if use system-cairo; then
+		mozconfig_enable system-cairo
+	fi
+
+	if use system-extension-dirs; then
+		mozconfig_enable system-extension-dirs
+	fi
+
+	if use system-pixman; then
+		mozconfig_enable system-pixman
 	fi
 
 	# Enabling this causes xpcshell to hang during the packaging process,
