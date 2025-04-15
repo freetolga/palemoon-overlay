@@ -79,6 +79,9 @@ src_prepare() {
 	sed -i -e "s:/usr/lib64/mozilla/plugins:/usr/lib64/nsbrowser/plugins:" \
 		"${S}/platform/xpcom/io/nsAppFileLocationProvider.cpp" \
 		|| die "sed failed to replace plugin path for 64bit!"
+	sed -i -e "s:caddr_t:void *:" \
+		"${S}/platform/python/psutil/psutil/_psutil_linux.c" \
+		|| die "sed failed to replace caddr_t with void * on psutil"
 
 	default
 }
